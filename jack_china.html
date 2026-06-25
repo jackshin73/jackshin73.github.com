@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#D85A30">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Jack China">
+<title>Jack China</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --coral: #D85A30;
+    --coral-light: #FAECE7;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-dark: #0F6E56;
+    --bg: #F8F7F4;
+    --bg2: #FFFFFF;
+    --bg3: #EFEFEC;
+    --text: #1A1A18;
+    --text2: #6B6A65;
+    --text3: #A09F99;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1A1A18;
+      --bg2: #252523;
+      --bg3: #2E2E2B;
+      --text: #F0EFE9;
+      --text2: #A09F99;
+      --text3: #6B6A65;
+      --border: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.18);
+      --coral-light: #3A1A0C;
+      --teal-light: #0A2920;
+    }
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--bg2);
+    padding: 20px 16px 14px;
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .app-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .app-title span { color: var(--coral); }
+  .progress-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .stat-card {
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+  }
+  .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .stat-value { font-size: 22px; font-weight: 600; color: var(--text); }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-btn {
+    flex: 1;
+    padding: 11px 4px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text2);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-btn.active { color: var(--coral); border-bottom-color: var(--coral); font-weight: 500; }
+
+  /* CONTENT */
+  .content { flex: 1; padding: 16px; overflow-y: auto; }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* CATEGORY GRID */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cat-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cat-card:active { transform: scale(0.97); }
+  .cat-icon { font-size: 26px; margin-bottom: 8px; }
+  .cat-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .cat-bar-wrap { height: 4px; background: var(--bg3); border-radius: 2px; margin-bottom: 4px; }
+  .cat-bar-fill { height: 4px; background: var(--coral); border-radius: 2px; transition: width 0.4s; }
+  .cat-prog-label { font-size: 11px; color: var(--text3); }
+
+  /* PHRASE CARDS */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    padding: 0;
+  }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .cat-header-icon { font-size: 22px; }
+  .cat-header-name { font-size: 18px; font-weight: 600; color: var(--text); }
+  .cat-header-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+  .phrase-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .phrase-card.learned { border-left: 3px solid var(--teal); }
+  .phrase-chinese {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 5px;
+    letter-spacing: 0.04em;
+    font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  }
+  .phrase-pinyin {
+    font-size: 13px;
+    color: var(--coral);
+    margin-bottom: 5px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+  .phrase-korean { font-size: 14px; color: var(--text2); }
+  .phrase-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 0.5px solid var(--border);
+  }
+  .badge-learned {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    font-weight: 500;
+  }
+  .badge-unlearned {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--bg3);
+    color: var(--text3);
+  }
+  .mark-btn {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: none;
+    border: 0.5px solid var(--border2);
+    color: var(--text2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mark-btn:active { opacity: 0.7; }
+  .mark-btn.done {
+    background: var(--teal);
+    color: white;
+    border-color: var(--teal);
+  }
+
+  /* PROGRESS TAB */
+  .overall-box {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .overall-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+  }
+  .overall-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .overall-pct { font-size: 24px; font-weight: 600; color: var(--coral); }
+  .big-bar { height: 8px; background: var(--bg3); border-radius: 4px; margin-bottom: 8px; }
+  .big-bar-fill { height: 8px; background: var(--coral); border-radius: 4px; transition: width 0.6s; }
+  .overall-sub { font-size: 12px; color: var(--text3); }
+
+  .prog-list { display: flex; flex-direction: column; gap: 10px; }
+  .prog-row {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .prog-row:active { opacity: 0.8; }
+  .prog-row-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .prog-row-name { font-size: 14px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .prog-row-count { font-size: 12px; color: var(--text3); }
+  .prog-bar { height: 4px; background: var(--bg3); border-radius: 2px; }
+  .prog-bar-fill { height: 4px; background: var(--coral); border-radius: 2px; transition: width 0.4s; }
+
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: none;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text3);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .reset-btn:hover { color: #E24B4A; border-color: #E24B4A; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="app-title">Jack <span>China</span></div>
+      <i class="ti ti-language" style="font-size:22px;color:var(--coral)" aria-hidden="true"></i>
+    </div>
+    <div class="progress-summary">
+      <div class="stat-card">
+        <div class="stat-label">학습 완료 문장</div>
+        <div class="stat-value" id="total-learned">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">전체 완료율</div>
+        <div class="stat-value" id="total-pct">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" id="tab-learn" onclick="switchTab('learn')">
+      <i class="ti ti-book" style="font-size:15px" aria-hidden="true"></i> 학습
+    </button>
+    <button class="nav-btn" id="tab-progress" onclick="switchTab('progress')">
+      <i class="ti ti-chart-bar" style="font-size:15px" aria-hidden="true"></i> 진도
+    </button>
+  </div>
+
+  <div class="content" id="content-area"></div>
+</div>
+
+<script>
+const DATA = {
+  인사: {
+    icon: '👋',
+    phrases: [
+      { zh: '你好', py: 'Nǐ hǎo', kr: '안녕하세요' },
+      { zh: '早上好', py: 'Zǎoshang hǎo', kr: '좋은 아침이에요' },
+      { zh: '晚上好', py: 'Wǎnshang hǎo', kr: '좋은 저녁이에요' },
+      { zh: '再见', py: 'Zàijiàn', kr: '안녕히 계세요' },
+      { zh: '谢谢', py: 'Xièxie', kr: '감사합니다' },
+      { zh: '对不起', py: 'Duìbuqǐ', kr: '죄송합니다' },
+      { zh: '没关系', py: 'Méi guānxi', kr: '괜찮습니다' },
+      { zh: '请问', py: 'Qǐngwèn', kr: '실례합니다' },
+    ]
+  },
+  식당: {
+    icon: '🍜',
+    phrases: [
+      { zh: '我要点菜', py: 'Wǒ yào diǎn cài', kr: '주문할게요' },
+      { zh: '这个多少钱？', py: 'Zhège duōshao qián?', kr: '이것은 얼마예요?' },
+      { zh: '好吃', py: 'Hǎo chī', kr: '맛있어요' },
+      { zh: '不辣', py: 'Bù là', kr: '안 맵게 해주세요' },
+      { zh: '买单', py: 'Mǎidān', kr: '계산해주세요' },
+      { zh: '服务员', py: 'Fúwùyuán', kr: '종업원' },
+      { zh: '菜单', py: 'Càidān', kr: '메뉴판' },
+      { zh: '水', py: 'Shuǐ', kr: '물' },
+    ]
+  },
+  쇼핑: {
+    icon: '🛍️',
+    phrases: [
+      { zh: '有没有？', py: 'Yǒu méiyǒu?', kr: '있나요?' },
+      { zh: '便宜一点', py: 'Piányí yīdiǎn', kr: '좀 깎아주세요' },
+      { zh: '太贵了', py: 'Tài guì le', kr: '너무 비싸요' },
+      { zh: '我看一下', py: 'Wǒ kàn yīxià', kr: '좀 볼게요' },
+      { zh: '买了', py: 'Mǎi le', kr: '살게요' },
+      { zh: '不要', py: 'Bùyào', kr: '필요 없어요' },
+      { zh: '大号', py: 'Dà hào', kr: '큰 사이즈' },
+      { zh: '小号', py: 'Xiǎo hào', kr: '작은 사이즈' },
+    ]
+  },
+  교통: {
+    icon: '🚇',
+    phrases: [
+      { zh: '去哪里？', py: 'Qù nǎlǐ?', kr: '어디 가세요?' },
+      { zh: '地铁站', py: 'Dìtiě zhàn', kr: '지하철역' },
+      { zh: '打车', py: 'Dǎchē', kr: '택시를 타다' },
+      { zh: '多少时间？', py: 'Duōshao shíjiān?', kr: '얼마나 걸려요?' },
+      { zh: '左边', py: 'Zuǒbiān', kr: '왼쪽' },
+      { zh: '右边', py: 'Yòubiān', kr: '오른쪽' },
+      { zh: '直走', py: 'Zhí zǒu', kr: '직진' },
+      { zh: '到了', py: 'Dào le', kr: '도착했어요' },
+    ]
+  },
+  숙박: {
+    icon: '🏨',
+    phrases: [
+      { zh: '预订房间', py: 'Yùdìng fángjiān', kr: '방 예약하다' },
+      { zh: '办理入住', py: 'Bànlǐ rùzhù', kr: '체크인 하다' },
+      { zh: '退房', py: 'Tuì fáng', kr: '체크아웃 하다' },
+      { zh: '几楼？', py: 'Jǐ lóu?', kr: '몇 층이에요?' },
+      { zh: '热水', py: 'Rè shuǐ', kr: '온수' },
+      { zh: '毛巾', py: 'Máojīn', kr: '수건' },
+      { zh: '空调', py: 'Kōngtiáo', kr: '에어컨' },
+      { zh: '钥匙', py: 'Yàoshi', kr: '열쇠' },
+    ]
+  },
+  긴급상황: {
+    icon: '🚨',
+    phrases: [
+      { zh: '救命！', py: 'Jiùmìng!', kr: '살려주세요!' },
+      { zh: '我迷路了', py: 'Wǒ mílù le', kr: '길을 잃었어요' },
+      { zh: '我钱包丢了', py: 'Wǒ qiánbāo diū le', kr: '지갑을 잃어버렸어요' },
+      { zh: '医院', py: 'Yīyuàn', kr: '병원' },
+      { zh: '警察', py: 'Jǐngchá', kr: '경찰' },
+      { zh: '大使馆', py: 'Dàshǐguǎn', kr: '대사관' },
+      { zh: '我不舒服', py: 'Wǒ bù shūfu', kr: '몸이 좋지 않아요' },
+      { zh: '打电话', py: 'Dǎ diànhuà', kr: '전화를 걸다' },
+    ]
+  }
+};
+
+let learned = {};
+let currentTab = 'learn';
+let currentCat = null;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('jackchina_v2');
+    if (s) learned = JSON.parse(s);
+  } catch(e) { learned = {}; }
+}
+
+function saveState() {
+  try { localStorage.setItem('jackchina_v2', JSON.stringify(learned)); } catch(e) {}
+  updateHeader();
+}
+
+function getKey(cat, idx) { return cat + '_' + idx; }
+
+function getTotalStats() {
+  let total = 0, done = 0;
+  Object.keys(DATA).forEach(cat => {
+    total += DATA[cat].phrases.length;
+    DATA[cat].phrases.forEach((_, i) => { if (learned[getKey(cat,i)]) done++; });
+  });
+  return { total, done };
+}
+
+function getCatStats(cat) {
+  const total = DATA[cat].phrases.length;
+  let done = 0;
+  DATA[cat].phrases.forEach((_, i) => { if (learned[getKey(cat,i)]) done++; });
+  return { total, done };
+}
+
+function updateHeader() {
+  const { total, done } = getTotalStats();
+  document.getElementById('total-learned').textContent = done;
+  document.getElementById('total-pct').textContent = total ? Math.round(done/total*100) + '%' : '0%';
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  currentCat = null;
+  document.getElementById('tab-learn').classList.toggle('active', tab === 'learn');
+  document.getElementById('tab-progress').classList.toggle('active', tab === 'progress');
+  render();
+}
+
+function render() {
+  const el = document.getElementById('content-area');
+  if (currentTab === 'learn') {
+    if (!currentCat) renderCategories(el);
+    else renderPhrases(el, currentCat);
+  } else {
+    renderProgress(el);
+  }
+}
+
+function renderCategories(el) {
+  let html = '<div class="section-title">카테고리 선택</div><div class="category-grid">';
+  Object.keys(DATA).forEach(cat => {
+    const { total, done } = getCatStats(cat);
+    const pct = Math.round(done / total * 100);
+    html += `<div class="cat-card" onclick="openCat('${cat}')">
+      <div class="cat-icon">${DATA[cat].icon}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:${pct}%"></div></div>
+      <div class="cat-prog-label">${done}/${total} 완료</div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function openCat(cat) {
+  currentCat = cat;
+  render();
+  document.getElementById('content-area').scrollTop = 0;
+}
+
+function renderPhrases(el, cat) {
+  const phrases = DATA[cat].phrases;
+  const { total, done } = getCatStats(cat);
+  let html = `<button class="back-btn" onclick="currentCat=null;render()">
+    <i class="ti ti-arrow-left" style="font-size:15px" aria-hidden="true"></i> 카테고리로
+  </button>
+  <div class="cat-header">
+    <div class="cat-header-icon">${DATA[cat].icon}</div>
+    <div>
+      <div class="cat-header-name">${cat}</div>
+      <div class="cat-header-sub">${done}/${total}개 완료</div>
+    </div>
+  </div>`;
+
+  phrases.forEach((p, i) => {
+    const key = getKey(cat, i);
+    const isLearned = !!learned[key];
+    html += `<div class="phrase-card${isLearned ? ' learned' : ''}">
+      <div class="phrase-chinese">${p.zh}</div>
+      <div class="phrase-pinyin">${p.py}</div>
+      <div class="phrase-korean">${p.kr}</div>
+      <div class="phrase-meta">
+        ${isLearned
+          ? '<span class="badge-learned"><i class="ti ti-check" style="font-size:11px"></i> 학습 완료</span>'
+          : '<span class="badge-unlearned">미학습</span>'}
+        <button class="mark-btn${isLearned ? ' done' : ''}" onclick="toggleLearn('${cat}',${i})">
+          ${isLearned
+            ? '<i class="ti ti-x" style="font-size:12px" aria-hidden="true"></i> 취소'
+            : '<i class="ti ti-check" style="font-size:12px" aria-hidden="true"></i> 완료'}
+        </button>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function toggleLearn(cat, idx) {
+  const key = getKey(cat, idx);
+  if (learned[key]) delete learned[key];
+  else learned[key] = true;
+  saveState();
+  render();
+}
+
+function renderProgress(el) {
+  const { total, done } = getTotalStats();
+  const pct = total ? Math.round(done / total * 100) : 0;
+
+  let html = `<div class="overall-box">
+    <div class="overall-top">
+      <div>
+        <div class="overall-title">전체 학습 진도</div>
+        <div class="overall-sub" style="margin-top:2px">${done}개 완료 / 총 ${total}개</div>
+      </div>
+      <div class="overall-pct">${pct}%</div>
+    </div>
+    <div class="big-bar"><div class="big-bar-fill" style="width:${pct}%"></div></div>
+  </div>
+  <div class="section-title">카테고리별 진도</div>
+  <div class="prog-list">`;
+
+  Object.keys(DATA).forEach(cat => {
+    const { total: t, done: d } = getCatStats(cat);
+    const p = Math.round(d / t * 100);
+    html += `<div class="prog-row" onclick="switchTab('learn');openCat('${cat}')">
+      <div class="prog-row-top">
+        <span class="prog-row-name">${DATA[cat].icon} ${cat}</span>
+        <span class="prog-row-count">${d}/${t} &nbsp;·&nbsp; ${p}%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-bar-fill" style="width:${p}%"></div></div>
+    </div>`;
+  });
+
+  html += `</div>
+  <button class="reset-btn" onclick="confirmReset()">
+    <i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i>
+    학습 기록 초기화
+  </button>`;
+  el.innerHTML = html;
+}
+
+function confirmReset() {
+  if (confirm('모든 학습 기록을 초기화할까요?')) {
+    learned = {};
+    saveState();
+    render();
+  }
+}
+
+loadState();
+updateHeader();
+render();
+</script>
+</body>
+</html>
